@@ -445,7 +445,8 @@ class Channel(spec.DriverMixin):
         Called in response to a frame from the Broker when we call Basic.Cancel
         """
         # We need to delete the consumer tag from our _consumers
-        del(self._consumers[frame.method.consumer_tag])
+        if frame.method.consumer_tag in self._consumers:
+            del(self._consumers[frame.method.consumer_tag])
 
         # If we're closing and dont have any consumers left, close
         if self.closing and not len(self._consumers):
