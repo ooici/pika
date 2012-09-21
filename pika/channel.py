@@ -325,15 +325,15 @@ class Channel(spec.DriverMixin):
         if consumer_tag not in self._consumers:
             return
 
-        # Send a Basic.Cancel RPC call to close the Basic.Consume
-        self.transport.rpc(spec.Basic.Cancel(consumer_tag=consumer_tag,
-                                             nowait=nowait),
-                           self._on_cancel_ok, [spec.Basic.CancelOk])
-
         if callback:
             self.callbacks.add(self.channel_number,
                                spec.Basic.CancelOk,
                                callback)
+
+        # Send a Basic.Cancel RPC call to close the Basic.Consume
+        self.transport.rpc(spec.Basic.Cancel(consumer_tag=consumer_tag,
+                                             nowait=nowait),
+                           self._on_cancel_ok, [spec.Basic.CancelOk])
 
     def basic_consume(self, consumer_callback,
                       queue='', no_ack=False, exclusive=False,
